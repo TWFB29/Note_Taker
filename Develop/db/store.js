@@ -5,11 +5,11 @@ const read = util.promisify(fs.readFile);
 const write = util.promisify(fs.readFile);
 
 class Store {
-    readfnc() {
-        return read('/db.json', 'utf8');
+    readNotes() {
+        return read('./db.json', 'utf8');
     }
-    writefnc(notes) {
-        return write('/db.json', JSON.stringify(notes))
+    writeNotes(notes) {
+        return write('./db.json', JSON.stringify(notes))
     }
 }
 module.exports = new Store();
