@@ -6,19 +6,19 @@ const fs =  require('fs')
 
 // API GET REQUEST
    router.get('/notes', (req, res) => {
-        fs.readFile("./db/db.json", (err, data) => {
-            // console.log(data)
-            const notes = JSON.parse(data);
-            res.json(notes)
+        store
+        .getNotes()
+        .then(notes => {
+            return res.json(notes)
         })
+        .catch(err => res.status(500).json(err))
     })
 
 // API POST REQUESTS
 
 router.post('/notes', (req, res) => {
     store
-
-        .writeNotes(req.body)
+        .addNotes(req.body)
         .then((note) => res.json(note))
         .catch((err) => res.status(500).json(err));
 });
