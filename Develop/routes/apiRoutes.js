@@ -1,44 +1,24 @@
-const generateUniqueId = require('generate-unique-id');
-
-const idGenerate = generateUniqueId({
-    length: 10,
-    useLetters: false,
-    useNumbers: true,
-    useSymbols: []
-});
-
+const store = require('../db/store');
+const router = require('express').Router;
 
 
 // API GET REQUEST
-module.exports = (app) => {
-    
-    app.get('/api/notes', (req, res) => {
-        fs.readFile('./Develop/db/db.json', (err, data) => {
-            if (err) throw err;
-            notesData = JSON.parse(data);
-            res.send(notesData);
-        });
+   router.get('/notes', (req, res) => {
+        store
+        .getNotes()
+        .then((notes)=>{
+            return res.json(notes);
+        })
+        .catch((err) => res.status(580).json(err));
     });
-}
-
-
-
 
 // API POST REQUESTS
 
-app.post('/api/notes', (req, res) => {
-    const notes = req.body;
+router.post('/notes', (req, res) => {
+    store
+        .addNote(req.body)
+        .then((note) => res.json(note))
+        .catch((err) => res.status(580).json(err));
+});
 
-    fs.readFile('./db/db.json', (err, data) => {
-        if (err) throw err;
-        JSON.parse(data).push(notes);
-        notes.forEach((newNote) => {
-            newNote.id = idGenerate();
-            return JSON.stringify(notes)
-        })
-    })
-    fs.writeFile('./db/db.json', (err, data) => {
-        if (err) throw err;
-    });
-
-})
+module.exports = router;
